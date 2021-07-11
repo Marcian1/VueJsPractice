@@ -18,8 +18,10 @@ const router = createRouter({
         },
         {
             path:'/teams/:teamId',
-            component: TeamMembers
-        }
+            component: TeamMembers,
+            props:true
+        },
+        
     ]
 });
 const app = createApp(App)
