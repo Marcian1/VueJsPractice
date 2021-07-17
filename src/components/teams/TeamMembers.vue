@@ -30,9 +30,10 @@ export default {
   },
   methods: {
     loadTeamMembers(teamId) {
-
+      this.teamName = '';
+      this.members = [];
       const selectedTeam = this.teams.find((team) => team.id === teamId);
-      this.teamname = selectedTeam.name;
+      this.teamName = selectedTeam.name;
       selectedTeam.members.forEach((member) => {
         const user = this.users.find((user) => user.id === member);
         this.members.push(user);
