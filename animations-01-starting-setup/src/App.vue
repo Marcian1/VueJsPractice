@@ -4,7 +4,13 @@
     <button @click="animateBlock">Animate</button>
   </div>
   <div class="container">
-    <transition name="para">
+    <transition name="para" 
+      @before-enter="beforeEnter"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @before-leave="beforeLeave"
+      @leave="leave"
+      @after-leave="afterLeave">
       <p v-if="paraIsVisible">This is only sometimes visible...</p>
     </transition>
     <button @click="toggleParagraph">Toggle Paragraph</button>
@@ -53,6 +59,24 @@ export default {
     hideDialog() {
       this.dialogIsVisible = false;
     },
+    beforeEnter() {
+      console.log('beforeEnter');
+    },
+    enter() {
+      console.log('enter');
+    },
+    afterEnter() {
+      console.log('afterEnter')
+    },
+    beforeLeave() {
+      console.log('beforeLeave')
+    },
+    leave() {
+      console.log('leave')
+    },
+    afterLeave() {
+      console.log('afterLeave')
+    }
   },
 };
 </script>
@@ -110,7 +134,7 @@ button:active {
 }
 
 .para-enter-active {
-  animation: slide-scale 0.3s ease-out;
+  animation: slide-scale 2s ease-out;
 }
 
 .para-enter-to {
