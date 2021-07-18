@@ -1,9 +1,15 @@
 <template>
   <div class="container">
-    <div class="block" :class="{animatedClass:isAnimatedBlock}"></div>
-    <button @click="animateBlock" >Animate</button>
+    <div class="block" :class="{animate: animatedBlock}"></div>
+    <button @click="animateBlock">Animate</button>
   </div>
-  <base-modal @close="hideDialog" v-if="dialogIsVisible">
+  <div class="container">
+    <transition name="para">
+      <p v-if="paraIsVisible">This is only sometimes visible...</p>
+    </transition>
+    <button @click="toggleParagraph">Toggle Paragraph</button>
+  </div>
+  <base-modal @close="hideDialog" :open="dialogIsVisible">
     <p>This is a test dialog!</p>
     <button @click="hideDialog">Close it!</button>
   </base-modal>
@@ -16,13 +22,17 @@
 export default {
   data() {
     return {
-      isAnimatedBlock: false, 
-      dialogIsVisible: false 
-      };
+      animatedBlock: false,
+      dialogIsVisible: false,
+      paraIsVisible: false,
+    };
   },
   methods: {
     animateBlock() {
-      this.isAnimatedBlock = true;
+      this.animatedBlock = true;
+    },
+    toggleParagraph() {
+      this.paraIsVisible = !this.paraIsVisible;
     },
     showDialog() {
       this.dialogIsVisible = true;
@@ -63,7 +73,7 @@ button:active {
   height: 8rem;
   background-color: #290033;
   margin-bottom: 2rem;
-  /* transition: transform 0.3s ease-out */
+  /* transition: transform 0.3s ease-out; */
 }
 .container {
   max-width: 40rem;
@@ -76,24 +86,51 @@ button:active {
   border: 2px solid #ccc;
   border-radius: 12px;
 }
-.animatedClass {
-  /*transform: translateX(-150px);*/
-  animation: slide-out 0.3s ease-out forwards
+.animate {
+  /* transform: translateX(-150px); */
+  animation: slide-fade 0.3s ease-out forwards;
 }
 
-@keyframes slide-out {
+.para-enter-from {
+  /* opacity: 0;
+  transform: translateY(-30px); */
+}
+
+.para-enter-active {
+  animation: slide-scale 0.3s ease-out;
+}
+
+.para-enter-to {
+  /* opacity: 1;
+  transform: translateY(0); */
+}
+
+.para-leave-from {
+  /* opacity: 1;
+  transform: translateY(0); */
+}
+
+.para-leave-active {
+  /* transition: all 0.3s ease-in; */
+  animation: slide-scale 0.3s ease-out;
+}
+
+.para-leave-to {
+  /* opacity: 0;
+  transform: translateY(30px); */
+}
+
+@keyframes slide-scale {
   0% {
-    transform: translteX(0) scale(1);
+    transform: translateX(0) scale(1);
   }
 
   70% {
-    transform: translateX(-120px) scale(1.5);
+    transform: translateX(-120px) scale(1.1);
   }
 
   100% {
     transform: translateX(-150px) scale(1);
   }
 }
-
-
 </style>
