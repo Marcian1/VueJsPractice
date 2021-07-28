@@ -10,7 +10,9 @@
       @after-enter="afterEnter"
       @before-leave="beforeLeave"
       @leave="leave"
-      @after-leave="afterLeave">
+      @after-leave="afterLeave"
+      @enter-cancelled="cancelEnter"
+      @leave-cancelled="cancelLeave">
       <p v-if="paraIsVisible">This is only sometimes visible...</p>
     </transition>
     <button @click="toggleParagraph">Toggle Paragraph</button>
@@ -37,10 +39,18 @@ export default {
       animatedBlock: false,
       dialogIsVisible: false,
       paraIsVisible: false,
-      isButtonVisible:false
+      isButtonVisible:false,
+      enterInterval: null,
+      leaveInterval: null
     };
   },
   methods: {
+    cancelEnter() {
+      clearInterval(this.enterInterval);
+    },
+    cancelLeave() {
+      clearInterval(this.leaveInterval);
+    },
     animateBlock() {
       this.animatedBlock = true;
     },
@@ -59,10 +69,20 @@ export default {
     hideDialog() {
       this.dialogIsVisible = false;
     },
-    beforeEnter() {
+    beforeEnter(el) {
       console.log('beforeEnter');
+      el.style.opacity = 0;
     },
-    enter() {
+    enter(el,done) {
+      let round = 0;
+      this.enterInterval = setInterval(() => {
+        el.style.opacity = round * 0.01;
+        round++;
+        if(round > 100) {
+          clearInterval(this.enterInterval);
+          done();
+        }
+      }, 20)
       console.log('enter');
     },
     afterEnter() {
@@ -71,7 +91,16 @@ export default {
     beforeLeave() {
       console.log('beforeLeave')
     },
-    leave() {
+    leave(el,done) {
+      let round = 100;
+      this.leaveInterval = setInterval(() => {
+        el.style.opacity = round * 0.01;
+        round--;
+        if(round < 0) {
+          clearInterval(this.leaveInterval);
+          done();
+        }
+      }, 20)
       console.log('leave')
     },
     afterLeave() {
@@ -134,7 +163,7 @@ button:active {
 }
 
 .para-enter-active {
-  animation: slide-scale 2s ease-out;
+  /*animation: slide-scale 2s ease-out;*/
 }
 
 .para-enter-to {
@@ -149,7 +178,7 @@ button:active {
 
 .para-leave-active {
   /* transition: all 0.3s ease-in; */
-  animation: slide-scale 0.3s ease-out;
+  /*animation: slide-scale 0.3s ease-out;*/
 }
 
 .para-leave-to {
