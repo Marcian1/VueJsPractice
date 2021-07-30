@@ -1,29 +1,28 @@
 <template>
-  <ul>
-    <transition-group name="users">
-      <li v-for="user in users" :key="user" @click="removeUser(user)">
-        {{ user }}
-      </li>
-    </transition-group>
-  </ul>
-  <input type="text" ref="inputText" />
-  <button @click="addUser()">Add User</button>
+  <transition-group tag="ul" name="user-list">
+    <li v-for="user in users" :key="user" @click="removeUser(user)">
+      {{ user }}
+    </li>
+  </transition-group>
+  <div>
+    <input type="text" ref="userNameInput" />
+    <button @click="addUser">Add User</button>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      users: ['User1', 'User2', 'User3', 'User4']
+      users: ['Max', 'Manu', 'Julie', 'Angela', 'Michael']
     };
   },
   methods: {
     addUser() {
-      const enteredValue = this.$refs.inputText.value;
-      this.users.push(enteredValue);
+      const enteredUserName = this.$refs.userNameInput.value;
+      this.users.unshift(enteredUserName);
     },
     removeUser(user) {
-      console.log(user);
       this.users = this.users.filter(usr => usr !== user);
     }
   }
@@ -32,8 +31,8 @@ export default {
 
 <style scoped>
 ul {
-  list-style: none; /* Removes the bullet points of the list */
-  margin: 0;
+  list-style: none;
+  margin: 1rem 0;
   padding: 0;
 }
 li {
@@ -42,27 +41,32 @@ li {
   text-align: center;
 }
 
-.users-enter-from {
+.user-list-enter-from {
   opacity: 0;
   transform: translateX(-30px);
 }
-.users-enter-active {
-  transition: all 1s ease-out
+
+.user-list-enter-active {
+  transition: all 1s ease-out;
 }
 
-.users-enter-to,
-.users-leave-from {
+.user-list-enter-to,
+.user-list-leave-from {
   opacity: 1;
   transform: translateX(0);
 }
 
+.user-list-leave-active {
+  transition: all 1s ease-in;
+  position: absolute;
+}
 
-.users-leave-to {
+.user-list-leave-to {
   opacity: 0;
   transform: translateX(30px);
 }
-.users-leave-active {
-  transition: all 1s ease-in
-}
 
+.user-list-move {
+  transition: transform 0.8s ease;
+}
 </style>
